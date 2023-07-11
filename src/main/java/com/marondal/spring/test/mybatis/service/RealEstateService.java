@@ -36,5 +36,39 @@ public class RealEstateService {
 		
 		return realEstateList;
 	}
+	
+	// RealEstate 객체를 기반으로 매물 정보 저장 기능
+	public int addRealEstateByObject(RealEstate realEstate) {
+		int count = realEstateRepository.insertRealEstateByObject(realEstate);
+		return count;
+	}
+	
+	// 매물 정보를 전달 받고, 정보 저장
+	public int addRealEstate(
+			int realtorId
+			, String address
+			, int area
+			, String type
+			, int price
+			, int rentPrice) {
+		
+		int count = realEstateRepository.insertRealEstate(realtorId, address, area, type, price, rentPrice);
+		
+		return count;
+		
+	}
+	
+	// 수정 대상 id와 type, price 값 전달 받고, 수정 기능
+	public int updateRealEstate(int id, String type, int price) {
+		
+		int count = realEstateRepository.updateRealEstate(id, type, price);
+		return count;
+	}
+	
+	public int deleteRealEstate(int id) {
+		int count = realEstateRepository.deleteRealEstate(id);
+		return count;
+	}
+			
 
 }
