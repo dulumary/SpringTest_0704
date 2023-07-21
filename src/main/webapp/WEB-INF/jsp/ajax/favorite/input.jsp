@@ -17,7 +17,13 @@
 		<label>제목</label>
 		<input type="text" class="form-control" id="nameInput">
 		<label class="mt-3">주소</label>
-		<input type="text" class="form-control" id="urlInput">
+		
+		<div class="d-flex">
+			<input type="text" class="form-control" id="urlInput">
+			<button type="button" class="btn btn-success" id="duplicateBtn">중복확인</button>
+		</div>
+		<div class="small text-success d-none" id="availableUrlText">저장 가능한 url 입니다.</div>
+		<div class="small text-danger d-none" id="duplicateUrlText">중복된 url 입니다.</div>
 		
 		<button type="button" id="addBtn" class="btn btn-success btn-block mt-3">추가</button>
 	</div>
@@ -29,6 +35,63 @@
 	 <script>
 	 
 	 	$(document).ready(function() {
+	 		
+	 		var checkedDuplicate = false;
+	 		var isDuplicateUrl = true;
+	 		
+	 		$("#urlInput").on("input", function() {
+	 			// 중복확인과 관련된 모든 처리를 초기화 
+	 			checkedDuplicate = false;
+	 			isDuplicateUrl = true;
+	 			
+	 			$("#availableUrlText").addClass("d-none");
+	 			$("#duplicateUrlText").addClass("d-none");
+	 			
+	 		});
+	 		
+	 		$("#duplicateBtn").on("click", function() {
+	 			let url = $("#urlInput").val();
+	 			
+	 			if(url == "") {
+	 				alert("url을 입력하세요");
+	 				return ;
+	 			}
+	 			
+	 			// http:// 시작하지 않고,  https:// 시작하지 않으면
+	 			if(!url.startsWith("http://") && !url.startsWith("https://")) {
+	 				alert("주소형식을 확인해 주세요");
+	 				return ;
+	 			}
+	 			
+	 			
+	 			$.ajax({
+	 				type:"post"
+	 				, url:"/ajax/favorite/url_confirm"
+	 				, data:{"url":url}
+	 				, success:function(data) {
+	 					checkedDuplicate = true;
+	 					// 중복됨 : {"isDuplicate":true}
+	 					// 중복되지 않음 : {"isDuplicate":false}
+	 					if(data.isDuplicate) {
+	 						isDuplicateUrl = true;
+	 						$("#duplicateUrlText").removeClass("d-none");
+	 						$("#availableUrlText").addClass("d-none");
+	 					} else {
+	 						isDuplicateUrl = false;
+	 						$("#availableUrlText").removeClass("d-none");
+	 						$("#duplicateUrlText").addClass("d-none");
+	 					}
+	 				
+	 				
+	 				}
+	 				, error:function() {
+	 					alert("중복확인 에러");
+	 				}
+	 			});
+	 			
+	 			
+	 		});
+	 		
 	 		$("#addBtn").on("click", function() {
 	 			// 입력한 내용을 기반으로 add API로 데이터 저장
 	 			let name = $("#nameInput").val();
@@ -49,6 +112,20 @@
 	 				alert("주소형식을 확인해 주세요");
 	 				return ;
 	 			}
+	 			
+	 			// 중복체크 안 한경우 
+	 			if(checkedDuplicate == false) {
+	 				alert("url 중복확인을 하세요");
+	 				return ;
+	 			}
+	 			
+	 			// 중복된 경우 
+	 			if(isDuplicateUrl) {
+	 				alert("url이 중복되었습니다.");
+	 				return ;
+	 			}
+	 			
+	 			
 	 			
 	 			$.ajax({
 	 				type:"post"

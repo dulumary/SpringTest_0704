@@ -61,5 +61,31 @@ public class FavoriteController {
 		}
 		return resultMap;
 	}
+	
+	// url을 전달 받고, 중복 여부를 전달하는 API
+	@PostMapping("/url_confirm")
+	@ResponseBody
+	public Map<String, Boolean> isDuplicateUrl(@RequestParam("url") String url) {
+		
+		// 중복됨 : {"isDuplicate":true}
+		// 중복되지 않음 : {"isDuplicate":false}
+		
+		Map<String, Boolean> resultMap = new HashMap<>();
+		
+//		if(favoriteService.isDuplicateUrl(url)) {
+//			// 중복됨
+//			resultMap.put("isDuplicate", true);
+//		} else {
+//			// 중복 안됨
+//			resultMap.put("isDuplicate", false);
+//		}
+		
+		resultMap.put("isDuplicate", favoriteService.isDuplicateUrl(url));
+		
+		return resultMap;
+		
+	}
+	
+	
 
 }
