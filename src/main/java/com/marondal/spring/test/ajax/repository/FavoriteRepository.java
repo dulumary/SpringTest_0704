@@ -19,5 +19,7 @@ public interface FavoriteRepository {
 	
 	// 전달된 url과 일치하는 행의 개수를 리턴 
 	public int selectCountUrl(@Param("url") String url);
+	
+	public int deleteFavorite(@Param("id") int id);
 
 }
