@@ -26,5 +26,30 @@ public class CompanyService {
 		return company;
 		
 	}
+	
+	public Company updateCompany(int id, String scale, int headcount) {
+		// id를 기준으로 데이터 조회 
+		// 조회된 객체에 수정사항 적용
+		// 저장
+		Company company = companyRepository.findById(id).orElse(null);
+		
+		if(company != null) {
+			company = company.toBuilder()
+			.scale(scale)
+			.headcount(headcount)
+			.build();
+			
+			company = companyRepository.save(company);
+		}
+		
+		return company;
+		
+	}
+	
+	
+	public void deleteCompany(int id) {
+		
+		 companyRepository.findById(id).ifPresent(company -> companyRepository.delete(company));
+	}
 
 }

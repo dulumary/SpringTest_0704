@@ -16,22 +16,28 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@NoArgsConstructor
+
 @AllArgsConstructor
-@Builder (toBuilder=true)
+@NoArgsConstructor
+@Builder
 @Getter
-@Table(name="company")
+@Table(name="recruit")
 @Entity
-public class Company {
+public class Recruit {
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int id;
 	
-	private String name;
-	private String business;
-	private String scale;
-	private int headcount;
+	@Column(name="companyId")
+	private int companyId;
+	private String position;
+	private String responsibilities;
+	private String qualification;
+	private String type;
+	private String region;
+	private int salary;
+	private ZonedDateTime deadline;
 	
 	@UpdateTimestamp
 	@Column(name="createdAt", updatable=false)
